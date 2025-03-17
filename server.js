@@ -15,7 +15,7 @@ dotenv.config();
 // ✅ Enable CORS for frontend requests
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://simpleserverjs.vercel.app/"],
+    origin: ["http://localhost:5173", "https://taskerapp-flax.vercel.app"],
     credentials: true,
   })
 );

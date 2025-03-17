@@ -101,7 +101,7 @@ async function login(req, res, next) {
     // 🔴 Set token in HTTP-only cookie
     res.cookie("auth_token", token, {
       httpOnly: true, // Prevent access from JavaScript (XSS protection)
-      secure: process.env.NODE_ENV === "production", // Secure in production (HTTPS)
+      secure: true, // Secure in production (HTTPS)
       sameSite: "none", // Prevent CSRF attacks when its strict
       maxAge: 60 * 60 * 1000, // 1h
     });

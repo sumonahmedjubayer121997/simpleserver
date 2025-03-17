@@ -15,7 +15,7 @@ dotenv.config();
 // ✅ Enable CORS for frontend requests
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://your-frontend.vercel.app"],
+    origin: ["http://localhost:5173", "https://simpleserverjs.vercel.app/"],
     credentials: true,
   })
 );

@@ -1,54 +1,62 @@
 const express = require("express");
-const AuthRoute = require("./routes/auth.js"); // Auth Router
-const TodoRoute = require("./routes/todo.js"); //Todo Router
-const bodyParser = require("body-parser"); //Body-Parser
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
+const AuthRoute = require("./routes/auth.js"); // Auth Router
+const TodoRoute = require("./routes/todo.js"); // Todo Router
+
+dotenv.config(); // ✅ Load environment variables first
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-dotenv.config();
-
-// ✅ Enable CORS before defining routes
-// ✅ Enable CORS for frontend requests
+// ✅ Fix CORS Issues
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://taskerapp-flax.vercel.app",
-      "https://tasker.sumonahmed.info/",
-    ], // ✅ Add frontend URLs
-    credentials: true, // ✅ REQUIRED to allow cookies
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        "http://localhost:5173",
+        "https://taskerapp-flax.vercel.app",
+        "https://tasker.sumonahmed.info",
+      ];
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS Not Allowed"));
+      }
+    },
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // ✅ Allow OPTIONS for preflight
+    allowedHeaders: ["Content-Type", "Authorization"], // ✅ Ensure necessary headers are allowed
+    optionsSuccessStatus: 204, // ✅ Prevents unnecessary errors
   })
 );
 
-app.use(bodyParser.json());
+// ✅ Allow Express to parse JSON and Cookies
+app.use(express.json());
 app.use(cookieParser());
 
-// Middleware to parse JSON requests
-app.use(express.json());
-
-//Auth Router
+// ✅ Routes
 app.use("/api/user", AuthRoute);
-
-//Todo Router
 app.use("/api/todos", TodoRoute);
 
-// Default route
+// ✅ Default Route
 app.get("/", (req, res) => {
-  res.send("Hello, Express Server is running on port 5000!");
+  res.send("Hello, Express Server is running!");
 });
 
-//Handling Global Error
+// ✅ Global Error Handling
 app.use((err, req, res, next) => {
+  console.error("❌ Error:", err.message);
   const statusCode = err.statusCode || 500;
-  const message = err.message || "Internal Server Error";
-  res.status(statusCode).json({ error: message });
+  res.status(statusCode).json({
+    error: err.message || "Internal Server Error",
+    ...(process.env.NODE_ENV === "development" && { stack: err.stack }), // Show stack trace only in development
+  });
 });
 
-// Start the server
+// ✅ Start the Server
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
 });

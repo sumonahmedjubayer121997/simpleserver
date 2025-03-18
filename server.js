@@ -15,8 +15,12 @@ dotenv.config();
 // ✅ Enable CORS for frontend requests
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://taskerapp-flax.vercel.app"],
-    credentials: true,
+    origin: [
+      "http://localhost:5173",
+      "https://taskerapp-flax.vercel.app",
+      "https://tasker.sumonahmed.info/",
+    ], // ✅ Add frontend URLs
+    credentials: true, // ✅ REQUIRED to allow cookies
   })
 );
 

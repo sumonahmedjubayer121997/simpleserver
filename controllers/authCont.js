@@ -100,10 +100,10 @@ async function login(req, res, next) {
 
     // 🔴 Set token in HTTP-only cookie
     res.cookie("auth_token", token, {
-      httpOnly: true, // Prevent access from JavaScript (XSS protection)
-      secure: true, // Secure in production (HTTPS)
-      sameSite: "none", // Prevent CSRF attacks when its strict
-      maxAge: 60 * 60 * 1000, // 1h
+      httpOnly: true, // ✅ Prevents JavaScript from accessing the cookie (XSS protection)
+      secure: true, // ✅ Required for HTTPS (MUST be `true` in production)
+      sameSite: "None", // ✅ REQUIRED for cross-origin authentication
+      maxAge: 60 * 60 * 1000, // ✅ Cookie expires in 1 hour
     });
 
     console.log("✅ User Successfully Login:", user);
